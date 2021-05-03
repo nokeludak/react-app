@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home, Courses, Course, Students, Student } from './components';
-
+import { Home, Courses, Course, Students} from './components';
+import Student from '../src/components/Student';
 const MainRouter = () => {
 return (
     <Switch>

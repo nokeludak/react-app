@@ -120,4 +120,4 @@ const [student, setStudent] = useState({
         </div>
     );
 }
-export {Student};
+export default Student;
