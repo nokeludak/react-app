@@ -4,10 +4,11 @@ import { insert, update, read, remove } from '../services/apiService';
 
 
 const Course = ({ match, history }) => {
+    const [requiredMessage, setMessage] = useState("");
 
     const [id] = useState(match.params.id);
     const [course, setCourse] = useState({
-        _id:'0',
+        _id: '0',
         name: '',
         points: '0'
     });
@@ -30,19 +31,23 @@ const Course = ({ match, history }) => {
     const back = () => {
         history.push('/courses');
     }
-
     const save = () => {
-        if(id === '0') {
-            delete course._id
-            insert('courses', course, data => {
-                if(data) return history.push('/courses');
-                console.log('There was error during save data');
-            })
+        if (!course.name || !course.points) {
+            setMessage('*This field is required');
         } else {
-            update('courses', id, course, data => {
-                if(data) return history.push('/courses');
-                console.log('There was error during save data');
-            })
+
+            if (id === '0') {
+                delete course._id;
+                insert('courses', course, data => {
+                    if (data) return history.push('/courses');
+                    console.log('There was an error during saving data');
+                })
+            } else {
+                update('courses', id, course, data => {
+                    if (data) return history.push('/courses');
+                    console.log('There was an error during saving data');
+                })
+            }
         }
     }
     
@@ -54,37 +59,45 @@ const Course = ({ match, history }) => {
 
 
     return (
-    <div className='container'>
-        <h2>Course</h2>
-        <form className='imput-form'>
-            <div style={{margin:'12px 0'}}>
-                <label htmlFor='name'>Course name: </label>
-                <input type='text' 
-                       name='name' 
-                       value={course.name} 
-                       onChange={changeHandler} />
-            </div>
-            <div style={{margin:'12px 0'}}>
-                <label htmlFor='points'>Course points: </label>
-                <input type='text' 
-                       name='points' 
-                       value={course.points}
-                       onChange={changeHandler} />
-            </div>
-            <hr />
-            {id !== '0' && (
-            <div className='left'>
-                <button type='button' onClick={del}>DELETE</button>
-            </div>
-            )}
-            <div className='right'>
-                <button type='button' onClick={back}>BACK</button>
-                &nbsp;&nbsp;
-                <button type='button' onClick={save}>SAVE</button>
-            </div>
-        </form>
-    </div>
+        <div className='container'>
+            <h2>Course</h2>
+            <form className='input-form'>
+                <div className='fields'>
+                    <div className='label'>
+                        <label htmlFor='name'>Course name: </label>
+                    </div>
+                    <div className='input-field'>
+                        <input type='text'
+                            name='name' value={course.name}
+                            onChange={changeHandler} />
+                        <div className='msg'> {requiredMessage}</div>
+                    </div>
+                </div>
+                <div className='fields'>
+                    <div className='label'>
+                        <label htmlFor='points'>Course points: </label>
+                    </div>
+                    <div className='input-field' >
+                        <input type='text'
+                            name='points' value={course.points}
+                            onChange={changeHandler} />
+                        <div className='msg'>{requiredMessage} </div>
+                    </div>
+                </div>
+                <div className='buttons'>
+                    {id !== '0' && (
+                        <div className='left'>
+                            <button type='button' onClick={del}>DELETE</button>
+                        </div>
+                        )}
+                    <div className='right'>
+                        <button type='button' onClick={back}>BACK</button>
+                    &nbsp;&nbsp;
+                    <button type='button' onClick={save}>SAVE</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     );
 }
-
 export default Course;

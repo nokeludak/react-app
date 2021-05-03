@@ -7,6 +7,7 @@ const headers = {
 }
 
 const insert = (path, data, callback ) => {
+    data._id = undefined;
     axios.post(`${apiUrl}/${path}`, data, { headers })
     .then(response => callback(response.data))
     .catch(reason => {
